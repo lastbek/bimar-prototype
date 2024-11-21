@@ -1,0 +1,28 @@
+{
+  "navigation": {
+    "home": "Bosh sahifa",
+    "blog": "Blog",
+    "about": "Biz haqimizda",
+    "contact": "Bog'lanish",
+    "search": "Qidirish"
+  },
+  "search": {
+    "title": "Maqolalarni qidirish",
+    "description": "Sarlavha yoki matn bo'yicha maqolalarni qidiring",
+    "placeholder": "Maqolalarni qidirish...",
+    "loading": "Yuklanmoqda...",
+    "noResults": "Qidiruv bo'yicha natija topilmadi:"
+  },
+  "blog": {
+    "readMore": "Batafsil",
+    "publishedAt": "Nashr qilingan",
+    "readTime": "O'qish vaqti",
+    "minutes": "daqiqa",
+    "category": "Kategoriya"
+  },
+  "common": {
+    "loading": "Yuklanmoqda...",
+    "error": "Xatolik yuz berdi",
+    "tryAgain": "Qayta urinib ko'ring"
+  }
+}

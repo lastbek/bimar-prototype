@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 148 34% 45%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 148 24% 15%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 148 34% 45%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 148 34% 45%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 148 34% 45%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 148 24% 15%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 148 34% 45%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 148 34% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Custom Gradients */
+.bg-gradient-medical {
+  background: linear-gradient(135deg, #4C9D67 0%, #1F3028 100%);
+}
+
+.bg-gradient-medical-light {
+  background: linear-gradient(135deg, rgba(76, 157, 103, 0.1) 0%, rgba(31, 48, 40, 0.05) 100%);
+}
+
+.text-gradient-medical {
+  background: linear-gradient(135deg, #4C9D67 0%, #1F3028 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom Transitions */
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Gradient Text */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-400;
+}
+
+/* Card Hover Effects */
+.hover\:shadow-glow:hover {
+  box-shadow: 0 0 20px rgb(var(--primary) / 0.2);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-200 rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-300;
+}
+
+/* Grid Pattern */
+.grid-pattern {
+  background-size: 20px 20px;
+  @apply bg-gradient-to-r from-primary-50/30 to-transparent;
+}
+
+/* Custom Input Styles */
+input::placeholder {
+  @apply text-muted-foreground/70;
+}
+
+/* Custom Button Styles */
+.btn-hover-effect {
+  @apply relative overflow-hidden;
+}
+
+.btn-hover-effect::after {
+  content: '';
+  @apply absolute top-1/2 left-1/2 w-[300%] h-[300%];
+  background: radial-gradient(circle, rgb(var(--primary) / 0.1) 0%, transparent 70%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s;
+}
+
+.btn-hover-effect:hover::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Hero Section Styles */
+.hero-gradient {
+  @apply bg-gradient-to-br from-primary-50 to-background;
+}
+
+/* Category Card Styles */
+.category-card {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.category-card:hover {
+  @apply -translate-y-1;
+}
+
+/* Image Hover Effects */
+.img-hover {
+  @apply transition-transform duration-500 ease-in-out;
+}
+
+.img-hover:hover {
+  @apply scale-105;
+}
+
+/* Stats Counter Animation */
+@keyframes countUp {
+  from {
+    @apply opacity-0 translate-y-5;
+  }
+  to {
+    @apply opacity-100 translate-y-0;
+  }
+}
+
+.animate-count-up {
+  animation: countUp 1s ease-out forwards;
+}
