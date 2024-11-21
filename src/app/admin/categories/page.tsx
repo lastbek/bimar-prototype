@@ -172,6 +172,8 @@ function SortableCategory({ category }: { category: Category }) {
   );
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function CategoriesPage() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');

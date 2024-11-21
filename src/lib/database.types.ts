@@ -39,6 +39,35 @@ export interface Database {
           }
         ]
       }
+      blog_views: {
+        Row: {
+          id: string
+          blog_id: string
+          ip_address: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          blog_id: string
+          ip_address: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          blog_id?: string
+          ip_address?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_views_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       blogs: {
         Row: {
           id: string
@@ -119,6 +148,90 @@ export interface Database {
         }
         Relationships: []
       }
+      diseases: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+          description: string | null
+          image_url: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+          description?: string | null
+          image_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+          description?: string | null
+          image_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      disease_symptoms: {
+        Row: {
+          disease_id: string
+          symptom_id: string
+        }
+        Insert: {
+          disease_id: string
+          symptom_id: string
+        }
+        Update: {
+          disease_id?: string
+          symptom_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "disease_symptoms_disease_id_fkey"
+            columns: ["disease_id"]
+            isOneToOne: false
+            referencedRelation: "diseases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "disease_symptoms_symptom_id_fkey"
+            columns: ["symptom_id"]
+            isOneToOne: false
+            referencedRelation: "symptoms"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      symptoms: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tags: {
         Row: {
           id: string
@@ -151,7 +264,20 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_blog_view: {
+        Args: {
+          blog_id_param: string
+          ip_address_param: string
+        }
+        Returns: boolean
+      }
+      increment_blog_view: {
+        Args: {
+          blog_id_param: string
+          ip_address_param: string
+        }
+        Returns: void
+      }
     }
     Enums: {
       [_ in never]: never

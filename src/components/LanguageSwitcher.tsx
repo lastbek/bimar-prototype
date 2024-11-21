@@ -8,15 +8,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { languages } from '@/config/languages';
+import { languages, Language } from '@/config/languages';
 import { Button } from "@/components/ui/button";
 
 export default function LanguageSwitcher() {
-  const locale = useLocale();
+  const locale = useLocale() as Language;
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleLocaleChange = (newLocale: string) => {
+  const handleLocaleChange = (newLocale: Language) => {
     // Get the current path without the locale
     const currentPath = pathname.replace(`/${locale}`, '') || '/';
     // Navigate to the same path with new locale
@@ -36,7 +36,7 @@ export default function LanguageSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {Object.entries(languages).map(([key, { name, flag }]) => (
+        {(Object.entries(languages) as [Language, { name: string, flag: string }][]).map(([key, { name, flag }]) => (
           <DropdownMenuItem
             key={key}
             onClick={() => handleLocaleChange(key)}

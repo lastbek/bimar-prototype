@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Eye, Calendar, Users } from 'lucide-react';
+import { Plus, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useToast } from '@/components/ui/use-toast';
@@ -13,8 +13,9 @@ type Blog = Database['public']['Tables']['blogs']['Row'] & {
   tags: {
     tags: Database['public']['Tables']['tags']['Row'];
   }[];
-  unique_views_count: number;
 };
+
+export const dynamic = 'force-dynamic';
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Blog[]>([]);
@@ -26,14 +27,28 @@ export default function PostsPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        // First get all posts with their categories and tags
         const { data: postsData, error: postsError } = await supabase
           .from('blogs')
           .select(`
             *,
-            categories:category_id (*),
+            categories:category_id (
+              id,
+              name,
+              description,
+              slug,
+              created_at,
+              show_in_nav,
+              updated_at
+            ),
             tags:blog_tags (
-              tags:tag_id (*)
+              tags:tag_id (
+                id,
+                name,
+                slug,
+                description,
+                created_at,
+                updated_at
+              )
             )
           `)
           .order('created_at', { ascending: false });
@@ -41,30 +56,7 @@ export default function PostsPage() {
         if (postsError) throw postsError;
 
         if (postsData) {
-          // Then get unique view counts for all posts in a single query
-          const { data: viewsData, error: viewsError } = await supabase
-            .from('blog_views')
-            .select('blog_id, ip_address')
-            .in('blog_id', postsData.map(post => post.id));
-
-          if (viewsError) throw viewsError;
-
-          // Calculate unique views for each post
-          const uniqueViewsMap = new Map<string, Set<string>>();
-          viewsData?.forEach(view => {
-            if (!uniqueViewsMap.has(view.blog_id)) {
-              uniqueViewsMap.set(view.blog_id, new Set());
-            }
-            uniqueViewsMap.get(view.blog_id)?.add(view.ip_address);
-          });
-
-          // Combine posts with their unique view counts
-          const postsWithViews = postsData.map(post => ({
-            ...post,
-            unique_views_count: uniqueViewsMap.get(post.id)?.size || 0
-          }));
-
-          setPosts(postsWithViews as Blog[]);
+          setPosts(postsData as unknown as Blog[]);
         }
       } catch (error: any) {
         console.error('Error fetching posts:', error);
@@ -154,14 +146,6 @@ export default function PostsPage() {
                   <div className="flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
                     <span>{new Date(post.created_at).toLocaleDateString("uz-UZ")}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Eye className="h-4 w-4" />
-                    <span>{post.views || 0} ko'rildi</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4" />
-                    <span>{post.unique_views_count || 0} noyob ko'rish</span>
                   </div>
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-2">

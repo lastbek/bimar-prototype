@@ -16,14 +16,14 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useToast } from '@/components/ui/use-toast';
-import dynamic from 'next/dynamic';
+import dynamicImport from 'next/dynamic';
 import { Database } from '@/lib/database.types';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-const RichTextEditor = dynamic(() => import('@/components/RichTextEditor'), {
+const RichTextEditor = dynamicImport(() => import('@/components/RichTextEditor'), {
   ssr: false,
   loading: () => (
     <div className="h-[400px] flex items-center justify-center border rounded-lg">
@@ -34,6 +34,8 @@ const RichTextEditor = dynamic(() => import('@/components/RichTextEditor'), {
 
 type Category = Database['public']['Tables']['categories']['Row'];
 type Tag = Database['public']['Tables']['tags']['Row'];
+
+export const dynamic = 'force-dynamic';
 
 export default function CreatePostPage() {
   const [title, setTitle] = useState('');
@@ -111,7 +113,7 @@ export default function CreatePostPage() {
           content,
           category_id: categoryId,
           image_url: imageUrl,
-          read_time: parseInt(readTime),
+          read_time: readTime,
           published,
           author_id: user?.id,
         })
@@ -304,7 +306,7 @@ export default function CreatePostPage() {
             <Label>Maqola matni</Label>
             <div className="mt-2 border rounded-lg overflow-hidden">
               <RichTextEditor
-                value={content}
+                content={content}
                 onChange={setContent}
               />
             </div>

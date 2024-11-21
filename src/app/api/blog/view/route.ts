@@ -12,6 +12,8 @@ function getClientIP() {
   return headers().get('x-real-ip') || 'unknown';
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const { slug } = await request.json();

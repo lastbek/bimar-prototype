@@ -116,7 +116,7 @@ export function ProgressBar() {
             animate={{ 
               opacity: 1, 
               y: 0,
-              scale: pillScale
+              scale: pillScale.get()
             }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ 

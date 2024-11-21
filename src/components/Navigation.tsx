@@ -1,110 +1,98 @@
 'use client';
 
-import * as React from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useTranslations } from 'next-intl';
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "@/components/ui/button";
-import { SearchModal } from "./SearchModal";
-
-type Category = {
-  id: string;
-  name: string;
-  slug: string;
-};
-
-const locales = ['uz', 'ru'];
+import { SearchModal } from "@/components/SearchModal";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Navigation() {
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
-  const supabase = createClientComponentClient();
-
-  React.useEffect(() => {
-    const fetchCategories = async () => {
-      const { data } = await supabase
-        .from("categories")
-        .select("*")
-        .order("name");
-      if (data) setCategories(data);
-    };
-
-    fetchCategories();
-  }, [supabase]);
-
-  const currentLocale = pathname.startsWith('/ru') ? 'ru' : 'uz';
-
-  const switchLocale = (newLocale: string) => {
-    const currentPath = pathname.replace(/^\/[^\/]+/, '');
-    router.push(`/${newLocale}${currentPath}`);
-  };
+  const t = useTranslations('nav');
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#BAEDD1]/20 bg-white/75 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-      <nav className="container flex h-14 items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b border-[#BAEDD1]/20 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <nav className="container flex h-14 items-center">
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="hidden font-bold sm:inline-block">Bimar</span>
+            <span className="hidden font-bold sm:inline-block">
+              Medical Blog
+            </span>
           </Link>
-          <div className="flex gap-6 text-sm">
+          <div className="flex items-center space-x-6 text-sm font-medium">
+            <Link
+              href="/"
+              className={`transition-colors hover:text-foreground/80 ${
+                pathname === "/" ? "text-foreground" : "text-foreground/60"
+              }`}
+            >
+              {t('home')}
+            </Link>
             <Link
               href="/blog"
-              className={pathname === "/blog" ? "text-[#4C9D67]" : ""}
+              className={`transition-colors hover:text-foreground/80 ${
+                pathname?.startsWith("/blog")
+                  ? "text-foreground"
+                  : "text-foreground/60"
+              }`}
             >
-              Blog
+              {t('blog')}
             </Link>
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/categories/${category.slug}`}
-                className={pathname === `/categories/${category.slug}` ? "text-[#4C9D67]" : ""}
-              >
-                {category.name}
-              </Link>
-            ))}
+            <Link
+              href="/diseases"
+              className={`transition-colors hover:text-foreground/80 ${
+                pathname?.startsWith("/diseases")
+                  ? "text-foreground"
+                  : "text-foreground/60"
+              }`}
+            >
+              {t('diseases')}
+            </Link>
+            <Link
+              href="/symptoms"
+              className={`transition-colors hover:text-foreground/80 ${
+                pathname?.startsWith("/symptoms")
+                  ? "text-foreground"
+                  : "text-foreground/60"
+              }`}
+            >
+              {t('symptoms')}
+            </Link>
           </div>
         </div>
-
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            className="px-2"
-            onClick={() => setIsSearchOpen(true)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4"
+        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <div className="w-full flex-1 md:w-auto md:flex-none">
+            <Button
+              variant="ghost"
+              className="w-9 px-0 hover:bg-[#BAEDD1]/20"
+              onClick={() => setIsSearchOpen(true)}
             >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" x2="16.65" y1="21" y2="16.65"></line>
-            </svg>
-            <span className="sr-only">Search</span>
-          </Button>
-          <div className="flex gap-2">
-            {locales.map((locale) => (
-              <Button
-                key={locale}
-                variant={currentLocale === locale ? "default" : "ghost"}
-                size="sm"
-                onClick={() => switchLocale(locale)}
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 15 15"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
               >
-                {locale.toUpperCase()}
-              </Button>
-            ))}
+                <path
+                  d="M10 6.5C10 8.433 8.433 10 6.5 10C4.567 10 3 8.433 3 6.5C3 4.567 4.567 3 6.5 3C8.433 3 10 4.567 10 6.5ZM9.30884 10.0159C8.53901 10.6318 7.56251 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5C11 7.56251 10.6318 8.53901 10.0159 9.30884L12.8536 12.1464C13.0488 12.3417 13.0488 12.6583 12.8536 12.8536C12.6583 13.0488 12.3417 13.0488 12.1464 12.8536L9.30884 10.0159Z"
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+              <span className="sr-only">{t('search')}</span>
+            </Button>
           </div>
+          <LanguageSwitcher />
         </div>
       </nav>
-      <SearchModal open={isSearchOpen} onOpenChange={setIsSearchOpen} />
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </header>
   );
 }

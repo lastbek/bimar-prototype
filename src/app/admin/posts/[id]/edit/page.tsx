@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
+import { 
   Select,
   SelectContent,
   SelectItem,
@@ -22,6 +22,8 @@ import { Database } from '@/lib/database.types';
 type Category = Database['public']['Tables']['categories']['Row'];
 type Tag = Database['public']['Tables']['tags']['Row'];
 type Blog = Database['public']['Tables']['blogs']['Row'];
+
+export const dynamic = 'force-dynamic';
 
 export default function EditPostPage({
   params,
@@ -60,39 +62,9 @@ export default function EditPostPage({
         setPost(post);
         // Convert TipTap JSON content to HTML
         if (typeof post.content === 'string') {
-          try {
-            const parsedContent = JSON.parse(post.content);
-            let htmlContent = '';
-            
-            // Convert TipTap JSON to HTML
-            parsedContent.content.forEach((node: any) => {
-              if (node.type === 'paragraph') {
-                const textAlign = node.attrs?.textAlign ? ` style="text-align: ${node.attrs.textAlign};"` : '';
-                let paragraphContent = '';
-                
-                if (node.content) {
-                  node.content.forEach((textNode: any) => {
-                    if (textNode.type === 'text') {
-                      paragraphContent += textNode.text;
-                    }
-                  });
-                }
-                
-                if (paragraphContent) {
-                  htmlContent += `<p${textAlign}>${paragraphContent}</p>`;
-                } else {
-                  htmlContent += '<p><br></p>';
-                }
-              }
-            });
-            
-            setContent(htmlContent);
-          } catch (error) {
-            console.error('Error parsing content:', error);
-            setContent(post.content);
-          }
+          setContent(post.content);
         } else {
-          setContent(post.content || '');
+          setContent('');
         }
       }
 

@@ -1,128 +1,62 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { getImageUrl } from '@/lib/utils/image';
-import { Search, AlertTriangle } from 'lucide-react';
+import { Database } from '@/lib/database.types';
 
+// This is a server component
 export const revalidate = 3600;
 
-async function getSymptoms() {
-  const cookieStore = cookies();
-  const supabase = createServerComponentClient({ cookies: () => cookieStore });
+type Symptom = Database['public']['Tables']['symptoms']['Row'];
+
+// Function to generate a URL-friendly slug from a string
+function generateSlug(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/--+/g, '-'); // Replace multiple hyphens with single hyphen
+}
+
+export default async function SymptomsPage() {
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const { data: symptoms } = await supabase
     .from('symptoms')
     .select('*')
     .order('name');
 
-  return symptoms || [];
-}
-
-export default async function SymptomsPage() {
-  const symptoms = await getSymptoms();
+  const symptomsData = (symptoms || []) as Symptom[];
 
   return (
-    <main className="py-16">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Kasallik alomatlari
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Kasallik alomatlarini aniqlang va mos keladigan kasalliklar haqida ma'lumot oling
-          </p>
-          <div className="relative max-w-2xl mx-auto">
-            <Input
-              type="search"
-              placeholder="Alomatlarni qidirish..."
-              className="w-full pl-12 pr-4 py-3 rounded-full"
-            />
-            <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
-          </div>
-        </div>
-
-        {/* Severity Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {['Yengil', 'O'rta', 'Jiddiy'].map((severity) => (
-            <Card key={severity} className="p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  severity === 'Yengil' ? 'bg-green-100' :
-                  severity === 'O'rta' ? 'bg-yellow-100' :
-                  'bg-red-100'
-                }`}>
-                  <AlertTriangle className={`h-6 w-6 ${
-                    severity === 'Yengil' ? 'text-green-600' :
-                    severity === 'O'rta' ? 'text-yellow-600' :
-                    'text-red-600'
-                  }`} />
-                </div>
-                <h2 className="text-xl font-semibold">{severity} alomatlar</h2>
-              </div>
-              <p className="text-gray-600">
-                {severity === 'Yengil' ? 'Kundalik hayotga ta'sir qilmaydigan yengil alomatlar' :
-                 severity === 'O'rta' ? 'E'tiborga olish kerak bo'lgan o'rtacha alomatlar' :
-                 'Zudlik bilan shifokorga murojaat qilish kerak bo'lgan jiddiy alomatlar'}
-              </p>
-            </Card>
-          ))}
-        </div>
-
-        {/* Symptoms Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {symptoms.map((symptom) => (
-            <Card key={symptom.id} className="group hover:shadow-lg transition-shadow">
-              <Link href={`/symptoms/${symptom.slug}`}>
-                <div className="relative h-48 overflow-hidden rounded-t-lg">
-                  <Image
-                    src={getImageUrl(symptom.image_url)}
-                    alt={symptom.name}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  {symptom.severity && (
-                    <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium ${
-                      symptom.severity === 'Yengil' ? 'bg-green-100 text-green-800' :
-                      symptom.severity === 'O'rta' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {symptom.severity}
-                    </div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">{symptom.name}</h2>
-                  <p className="text-gray-600 line-clamp-2">{symptom.description}</p>
-                  {symptom.common_causes && symptom.common_causes.length > 0 && (
-                    <div className="mt-4">
-                      <h3 className="text-sm font-medium text-gray-900 mb-2">Ko'p uchraydigan sabablar:</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {symptom.common_causes.slice(0, 3).map((cause, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary"
-                          >
-                            {cause}
-                          </span>
-                        ))}
-                        {symptom.common_causes.length > 3 && (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                            +{symptom.common_causes.length - 3} ko'proq
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Link>
-            </Card>
-          ))}
-        </div>
+    <div className="container mx-auto py-16 px-4">
+      <div className="max-w-3xl mx-auto text-center mb-12">
+        <h1 className="text-4xl font-bold mb-4">Kasallik belgilari</h1>
+        <p className="text-xl text-muted-foreground">
+          Kasallik belgilari va ularning darajasi bo&apos;yicha ma&apos;lumot
+        </p>
       </div>
-    </main>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {symptomsData.map((symptom) => (
+          <a
+            key={symptom.id}
+            href={`/symptoms/${generateSlug(symptom.name)}`}
+            className="group block"
+          >
+            <div className="bg-card rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                  {symptom.name}
+                </h2>
+                {symptom.description && (
+                  <p className="text-muted-foreground mb-4 line-clamp-2">
+                    {symptom.description}
+                  </p>
+                )}
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
   );
 }

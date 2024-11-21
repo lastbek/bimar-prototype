@@ -19,7 +19,7 @@ export function ViewCounter({
   const supabase = createClientComponentClient<Database>();
 
   useEffect(() => {
-    const fetchUniqueViews = async () => {
+    const fetchAndTrackView = async () => {
       try {
         // First get the blog post id
         const { data: post } = await supabase
@@ -28,7 +28,14 @@ export function ViewCounter({
           .eq('slug', slug)
           .single();
 
-        if (!post) return;
+        if (!post) {
+          setIsLoading(false);
+          return;
+        }
+
+        // Get client IP address
+        const response = await fetch('https://api.ipify.org?format=json');
+        const { ip } = await response.json();
 
         // Get unique views count
         const { data: viewsData } = await supabase
@@ -42,29 +49,27 @@ export function ViewCounter({
 
         // Track the view if needed
         if (trackView) {
-          await supabase.from('blogs')
-            .select('id')
-            .eq('slug', slug)
-            .single()
-            .then(async ({ data: post }) => {
-              if (post) {
-                await fetch('/api/blog/view', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ slug }),
-                });
-              }
+          const { data: existingView } = await supabase
+            .rpc('check_blog_view', {
+              blog_id_param: post.id,
+              ip_address_param: ip
             });
+
+          if (!existingView) {
+            await supabase.rpc('increment_blog_view', {
+              blog_id_param: post.id,
+              ip_address_param: ip
+            });
+            setViews(prev => prev + 1);
+          }
         }
       } catch (error) {
-        console.error('Error fetching views:', error);
+        console.error('Error fetching/tracking views:', error);
         setIsLoading(false);
       }
     };
 
-    fetchUniqueViews();
+    fetchAndTrackView();
   }, [slug, trackView, supabase]);
 
   if (isLoading) {
@@ -79,7 +84,7 @@ export function ViewCounter({
   return (
     <div className="flex items-center gap-1 text-muted-foreground">
       <Eye className="h-4 w-4" />
-      <span>{views} noyob ko'rish</span>
+      <span>{views} views</span>
     </div>
   );
 }

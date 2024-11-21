@@ -14,13 +14,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
+type Category = {
+  id: string;
+  name: string;
+};
+
 type SearchResult = {
   id: string;
   title: string;
   slug: string;
   excerpt?: string;
-  image_url?: string;
+  categories?: Category[];
   category_name?: string;
+  image_url?: string;
 };
 
 export function SearchModal({
@@ -55,6 +61,7 @@ export function SearchModal({
           excerpt,
           image_url,
           categories (
+            id,
             name
           )
         `)
@@ -65,7 +72,7 @@ export function SearchModal({
       if (!error && data) {
         setResults(data.map(post => ({
           ...post,
-          category_name: post.categories?.name
+          category_name: post.categories?.[0]?.name
         })));
       }
     } catch (error) {

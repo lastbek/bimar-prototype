@@ -18,6 +18,8 @@ import { Database } from '@/lib/database.types';
 
 type Tag = Database['public']['Tables']['tags']['Row'];
 
+export const dynamic = 'force-dynamic';
+
 export default function TagsPage() {
   const [tags, setTags] = useState<Tag[]>([]);
   const [open, setOpen] = useState(false);
