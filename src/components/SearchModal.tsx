@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useDebounce } from "@/hooks/useDebounce";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from 'next-intl';
@@ -40,7 +39,6 @@ export function SearchModal({
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const debouncedSearch = useDebounce(searchQuery, 300);
-  const supabase = createClientComponentClient();
   const t = useTranslations('search');
 
   const performSearch = useCallback(async (query: string) => {
@@ -50,37 +48,27 @@ export function SearchModal({
     }
 
     setIsLoading(true);
-
     try {
-      const { data, error } = await supabase
-        .from('blogs')
-        .select(`
-          id,
-          title,
-          slug,
-          excerpt,
-          image_url,
-          categories (
-            id,
-            name
-          )
-        `)
-        .textSearch('title', query)
-        .eq('published', true)
-        .limit(5);
-
-      if (!error && data) {
-        setResults(data.map(post => ({
-          ...post,
-          category_name: post.categories?.[0]?.name
-        })));
-      }
+      // TODO: Implement your search logic here
+      // This is a placeholder that you can replace with your actual search implementation
+      const mockResults: SearchResult[] = [
+        {
+          id: '1',
+          title: 'Example Result',
+          slug: 'example-result',
+          excerpt: 'This is an example search result',
+          category_name: 'General'
+        }
+      ];
+      
+      setResults(mockResults);
     } catch (error) {
       console.error('Search error:', error);
+      setResults([]);
     } finally {
       setIsLoading(false);
     }
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
     performSearch(debouncedSearch);
