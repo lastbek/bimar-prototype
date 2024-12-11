@@ -1,4 +1,4 @@
-// File: /home/new_user/CascadeProjects/medical-blog/src/app/layout.tsx
+// File: /home/new_user/Projects/bimar-prototype/src/app/layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

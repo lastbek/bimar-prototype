@@ -34,18 +34,17 @@ export default function NotFound() {
         {/* Error Message */}
         <p className="text-base font-semibold text-primary">404</p>
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
-          Page not found
+          Sahifa topilmadi
         </h1>
         <p className="mt-6 text-base leading-7 text-muted-foreground">
-          Oops! Looks like this page took a sick day. Don&apos;t worry, our other pages
-          are in perfect health.
+          Oops! Bu sahifa kasal bo'lib qolganga o'xshaydi. Xavotir olmang, boshqa sahifalarimiz sog'lom.
         </p>
 
         {/* Action Buttons */}
         <div className="mt-10 flex items-center justify-center gap-x-6">
           <Button asChild size="lg">
             <Link href="/">
-              Return Home
+              Bosh sahifaga qaytish
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg">
@@ -53,7 +52,7 @@ export default function NotFound() {
               href="/articles"
               className="flex items-center gap-x-2"
             >
-              Browse Articles
+              Boshqa kasalliklar
               <span aria-hidden="true">→</span>
             </Link>
           </Button>

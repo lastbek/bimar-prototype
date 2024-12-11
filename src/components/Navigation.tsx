@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "@/components/ui/button";
 import { SearchModal } from "@/components/SearchModal";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default function Navigation() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);

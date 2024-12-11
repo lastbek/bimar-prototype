@@ -1,92 +1,78 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@/lib/database.types';
-
-type Disease = Database['public']['Tables']['diseases']['Row'];
-type Symptom = Database['public']['Tables']['symptoms']['Row'];
-
-interface DiseaseWithSymptoms extends Disease {
-  disease_symptoms: Array<{
-    symptoms: Symptom;
-  }>;
+interface Disease {
+  id: number;
+  name: string;
+  slug: string;
 }
 
-export default async function DiseasesPage() {
-  const supabase = createServerComponentClient<Database>({ cookies });
+const diseases: Disease[] = [
+  { id: 1, name: 'Allergiya', slug: 'allergiya' },
+  { id: 2, name: 'Angina', slug: 'angina' },
+  { id: 3, name: 'Artroz', slug: 'artroz' },
+  { id: 4, name: 'Bronxit', slug: 'bronxit' },
+  { id: 5, name: 'Dermatit', slug: 'dermatit' },
+  { id: 6, name: 'Diabet', slug: 'diabet' },
+  { id: 7, name: 'Ekzema', slug: 'ekzema' },
+  { id: 8, name: 'Gastrit', slug: 'gastrit' },
+  { id: 9, name: 'Gepatit', slug: 'gepatit' },
+  { id: 10, name: 'Gipertoniya', slug: 'gipertoniya' },
+  { id: 11, name: 'Infarkt', slug: 'infarkt' },
+  { id: 12, name: 'Insult', slug: 'insult' },
+  { id: 13, name: 'Nevrit', slug: 'nevrit' },
+  { id: 14, name: 'Osteoporoz', slug: 'osteoporoz' },
+  { id: 15, name: 'Pnevmoniya', slug: 'pnevmoniya' },
+];
 
-  const { data: diseases } = await supabase
-    .from('diseases')
-    .select(`
-      *,
-      disease_symptoms (
-        symptoms (
-          id,
-          name
-        )
-      )
-    `)
-    .order('name');
+export default function DiseasesPage() {
+  // Group diseases by first letter
+  const groupedDiseases: { [key: string]: Disease[] } = {};
+  diseases.forEach((disease) => {
+    const firstLetter = disease.name[0].toUpperCase();
+    if (!groupedDiseases[firstLetter]) {
+      groupedDiseases[firstLetter] = [];
+    }
+    groupedDiseases[firstLetter].push(disease);
+  });
 
-  const diseasesWithSymptoms = (diseases || []) as DiseaseWithSymptoms[];
+  const letters = Object.keys(groupedDiseases).sort();
 
   return (
-    <div className="container mx-auto py-16 px-4">
-      <h1 className="text-4xl font-bold mb-12">Kasalliklar</h1>
+    <div className="py-16">
+      <div className="container">
+        <h1 className="text-4xl font-bold mb-8">Kasalliklar</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {diseasesWithSymptoms.map((disease) => (
-          <a
-            key={disease.id}
-            href={`/diseases/${disease.slug}`}
-            className="group block"
-          >
-            <div className="bg-card rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-              {disease.image_url && (
-                <div className="aspect-video w-full overflow-hidden">
-                  <img
-                    src={disease.image_url}
-                    alt={disease.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-              )}
-              <div className="p-6">
-                <h2 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                  {disease.name}
-                </h2>
-                {disease.description && (
-                  <p className="text-muted-foreground mb-4 line-clamp-2">
-                    {disease.description}
-                  </p>
-                )}
-                {disease.disease_symptoms && disease.disease_symptoms.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-medium mb-2">
-                      Asosiy belgilari:
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {disease.disease_symptoms
-                        .slice(0, 3)
-                        .map(({ symptoms }) => (
-                          <span
-                            key={symptoms.id}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary"
-                          >
-                            {symptoms.name}
-                          </span>
-                        ))}
-                      {disease.disease_symptoms.length > 3 && (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground">
-                          +{disease.disease_symptoms.length - 3} ta belgi
+        <div className="bg-white rounded-xl shadow-sm border p-6">
+          {/* Disease list by letter */}
+          <div className="grid grid-cols-3 gap-8 h-[800px]">
+            {letters.map((letter) => (
+              <div key={letter} id={letter} className="scroll-mt-24">
+                <div className="columns-3 gap-8">
+                  <div className="break-inside-avoid-column">
+                    <div className="flex gap-4">
+                      <div>
+                        <span className="text-primary font-bold text-xl">
+                          {letter}
                         </span>
-                      )}
+                      </div>
+                      <div className="flex-1">
+                        <div className="space-y-4">
+                          {groupedDiseases[letter].map((disease) => (
+                            <a
+                              key={disease.id}
+                              href={`/diseases/${disease.slug}`}
+                              className="block text-gray-600 hover:text-primary transition-colors"
+                            >
+                              {disease.name}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
-            </div>
-          </a>
-        ))}
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
