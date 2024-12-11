@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from 'next-intl';
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Button } from "@/components/ui/button";
 import { SearchModal } from "@/components/SearchModal";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
