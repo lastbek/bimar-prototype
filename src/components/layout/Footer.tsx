@@ -9,11 +9,11 @@ const navigation = {
     { name: 'Bosh sahifa', href: '/' },
     { name: 'Kasalliklar', href: '/diseases' },
     { name: 'Simptomlar', href: '/symptoms' },
-    { name: 'Dorilar', href: '/medicines' },
-    { name: 'Maqolalar', href: '/blog' },
-    { name: 'Shifokorlar', href: '/doctors' },
-    { name: 'Biz haqimizda', href: '/about' },
-    { name: 'Bog\'lanish', href: '/contact' },
+    { name: 'Dorilar', href: '/coming-soon' },
+    { name: 'Maqolalar', href: '/coming-soon' },
+    { name: 'Shifokorlar', href: '/coming-soon' },
+    { name: 'Biz haqimizda', href: '/coming-soon' },
+    { name: 'Bog\'lanish', href: '/coming-soon' },
   ],
   social: [
     {

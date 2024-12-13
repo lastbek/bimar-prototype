@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="200" cy="200" r="180" fill="#BAEDD1" fill-opacity="0.1"/>
+  
+  <!-- Monitor Screen -->
+  <rect x="50" y="100" width="300" height="200" rx="20" fill="white" stroke="#4C9D67" stroke-width="4"/>
+  
+  <!-- Heart Rate Line -->
+  <g transform="translate(70, 200)">
+    <!-- Grid Lines -->
+    <path d="M0,0 L260,0" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4 4"/>
+    <path d="M0,-40 L260,-40" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4 4"/>
+    <path d="M0,40 L260,40" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4 4"/>
+    
+    <!-- Animated Heart Rate -->
+    <path d="M0,0 L30,0 L45,-30 L60,30 L75,0 L260,0" 
+      stroke="#4C9D67" 
+      stroke-width="4"
+      fill="none"
+      stroke-linecap="round">
+      <animate
+        attributeName="d"
+        values="
+          M0,0 L30,0 L45,-30 L60,30 L75,0 L260,0;
+          M0,0 L30,0 L45,-40 L60,40 L75,0 L260,0;
+          M0,0 L30,0 L45,-30 L60,30 L75,0 L260,0"
+        dur="1s"
+        repeatCount="indefinite"
+      />
+    </path>
+  </g>
+
+  <!-- Monitor Stand -->
+  <path d="M175,300 L225,300 L200,350 L175,300" fill="#4C9D67"/>
+
+  <!-- Animated Plus Signs -->
+  <g>
+    <!-- Top Left Plus -->
+    <g transform="translate(100, 50)">
+      <rect x="-15" y="-5" width="30" height="10" rx="5" fill="#4C9D67" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="-5" y="-15" width="10" height="30" rx="5" fill="#4C9D67" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    <!-- Top Right Plus -->
+    <g transform="translate(300, 50)">
+      <rect x="-15" y="-5" width="30" height="10" rx="5" fill="#4C9D67" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+      </rect>
+      <rect x="-5" y="-15" width="10" height="30" rx="5" fill="#4C9D67" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+      </rect>
+    </g>
+    <!-- Bottom Left Plus -->
+    <g transform="translate(100, 350)">
+      <rect x="-15" y="-5" width="30" height="10" rx="5" fill="#4C9D67" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite" begin="1s"/>
+      </rect>
+      <rect x="-5" y="-15" width="10" height="30" rx="5" fill="#4C9D67" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite" begin="1s"/>
+      </rect>
+    </g>
+    <!-- Bottom Right Plus -->
+    <g transform="translate(300, 350)">
+      <rect x="-15" y="-5" width="30" height="10" rx="5" fill="#4C9D67" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+      </rect>
+      <rect x="-5" y="-15" width="10" height="30" rx="5" fill="#4C9D67" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.5;0.2" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+      </rect>
+    </g>
+  </g>
+
+  <!-- Pulse Circles -->
+  <circle cx="200" cy="200" r="140" stroke="#4C9D67" stroke-width="2" stroke-dasharray="4 4" opacity="0.3">
+    <animate
+      attributeName="r"
+      values="140;150;140"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="opacity"
+      values="0.3;0.1;0.3"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+  </circle>
+  <circle cx="200" cy="200" r="160" stroke="#4C9D67" stroke-width="2" stroke-dasharray="4 4" opacity="0.2">
+    <animate
+      attributeName="r"
+      values="160;170;160"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="opacity"
+      values="0.2;0.05;0.2"
+      dur="3s"
+      repeatCount="indefinite"
+    />
+  </circle>
+</svg>
